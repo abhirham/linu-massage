@@ -1,26 +1,83 @@
 <template>
-    <v-app-bar :elevation="2" color="primary" density="prominent" absolute>
+    <div class="bg-primary py-10 px-5">
         <v-container class="align-self-center">
             <v-row class="align-center">
-                <v-img height="100" src="../src/assets/logo.svg"></v-img>
+                <v-img height="150" src="/src/assets/logo.svg"></v-img>
                 <v-spacer></v-spacer>
-                <v-btn variant="text">home</v-btn>
-                <v-btn variant="text">About us</v-btn>
-                <v-btn variant="text">rewards</v-btn>
-                <v-btn variant="text">disclaimer</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn class="bg-btn-blue">login</v-btn>
+                <template v-for="link in links">
+                    <v-spacer
+                        v-if="link === 'separator'"
+                        class="d-none d-md-block"
+                    ></v-spacer>
+                    <v-btn
+                        @click="$router.push({ name: link.url })"
+                        :class="['d-none d-md-block', link.class]"
+                        variant="text"
+                        >{{ link.title }}</v-btn
+                    >
+                </template>
+
+                <v-menu location="bottom">
+                    <template v-slot:activator="{ props }">
+                        <v-btn
+                            class="d-md-none"
+                            variant="text"
+                            icon
+                            v-bind="props"
+                        >
+                            <v-icon icon="mdi-menu" size="40"></v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <template v-for="item in links">
+                            <v-divider v-if="item === 'separator'"></v-divider>
+                            <v-list-item
+                                :to="{ name: item.url }"
+                                v-else
+                                :key="item.title"
+                            >
+                                <v-list-item-title>{{
+                                    item.title
+                                }}</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                    </v-list>
+                </v-menu>
             </v-row>
         </v-container>
-    </v-app-bar>
+    </div>
 </template>
 
 <script>
 export default {
     data() {
         return {
-            count: 0,
+            links: [
+                {
+                    title: 'Home',
+                    url: 'home',
+                },
+                {
+                    title: 'About Us',
+                    url: 'about',
+                },
+                {
+                    title: 'Rewards',
+                    url: '',
+                },
+                {
+                    title: 'Disclaimer',
+                    url: '',
+                },
+                'separator',
+                {
+                    title: 'Login',
+                    url: '',
+                    class: 'bg-btn-blue',
+                },
+            ],
         }
     },
+    computed: {},
 }
 </script>

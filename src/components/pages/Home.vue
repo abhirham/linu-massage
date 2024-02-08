@@ -19,7 +19,7 @@
     </v-container>
     <div class="bg-primary">
         <v-container>
-            <h1>all courses</h1>
+            <h1 class="mb-5">All Courses</h1>
             <v-row>
                 <v-col
                     cols="12"
