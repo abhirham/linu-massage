@@ -25,7 +25,7 @@
                             icon
                             v-bind="props"
                         >
-                            <v-icon icon="mdi-menu" size="40"></v-icon>
+                            <v-icon icon="mdi-text" size="40"></v-icon>
                         </v-btn>
                     </template>
                     <v-list>
