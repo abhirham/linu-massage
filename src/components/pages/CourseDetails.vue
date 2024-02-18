@@ -5,7 +5,7 @@
                 <div class="text-secondary">$99.99 CAD</div>
                 <h1>Strive 15: Practice in a Self-Reflective Manner</h1>
                 <div>Course . 33 Lessons</div>
-                <v-btn color="primary">buy now</v-btn>
+                <v-btn class="mt-7" color="primary">buy now</v-btn>
             </v-col>
             <v-col>
                 <v-img
@@ -14,14 +14,19 @@
             </v-col>
         </v-row>
         <h1>Contents</h1>
-        <h3>Course Outline</h3>
+        <h3 class="mt-10 font-weight-medium">Course Outline</h3>
+
         <template v-for="(item, idx) in content" :key="item.title">
             <div>
                 <h2>Module {{ idx + 1 }}: {{ item.title }}</h2>
                 <p>{{ item.description }}</p>
-                <ul>
-                    <li v-for="x in item.headers" :key="x">{{ x }}</li>
-                </ul>
+                <p
+                    class="my-2 d-flex align-items-center"
+                    v-for="x in item.headers"
+                    :key="x"
+                >
+                    <v-icon>mdi-circle-medium</v-icon>{{ x }}
+                </p>
             </div>
         </template>
     </v-container>

@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@100..900&family=Open+Sans:wdth,wght@75..100,300..800&family=Roboto:wght@400;700&display=swap');
+
+* {
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-optical-sizing: auto;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+.course-price {
+    font-size: 18px;
+}
+
+.v-btn__content {
+    letter-spacing: normal;
+}
+
+.company-name {
+    font-family: 'Dancing Script', cursive;
+    font-family: 'Great Vibes', cursive;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 56px;
+}

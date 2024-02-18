@@ -19,6 +19,12 @@ const router = createRouter({
             props: true,
             component: () => import('@/components/pages/CourseDetails.vue'),
         },
+        {
+            path: '/referral',
+            name: 'referral',
+            props: true,
+            component: () => import('@/components/pages/Rewards.vue'),
+        },
     ],
 })
 

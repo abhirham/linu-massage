@@ -2,7 +2,9 @@
     <v-container>
         <v-row class="justify-center">
             <v-col cols="12" md="6" order="2">
-                <h1>Healing Touch Spa & Wellness Centre</h1>
+                <h1 class="company-name">
+                    Healing Touch Spa & Wellness Centre
+                </h1>
                 <div>
                     Experience the pinnacle of massage therapy expertise with
                     Healing Touch Spa & Wellness Centre's online courses.
@@ -33,7 +35,9 @@
                             src="https://d31ezp3r8jwmks.cloudfront.net/p0jod2nhkm5c7x8mggzuz0b91zb5"
                         ></v-img>
                         <v-card-item>
-                            <div class="text-overline mb-1 text-secondary">
+                            <div
+                                class="font-weight-bold course-price mb-1 text-secondary"
+                            >
                                 ${{ course.price }} CAD
                             </div>
                             <div class="text-h6 mb-1">{{ course.title }}</div>

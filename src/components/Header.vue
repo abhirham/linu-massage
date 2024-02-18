@@ -63,7 +63,7 @@ export default {
                 },
                 {
                     title: 'Rewards',
-                    url: '',
+                    url: 'referral',
                 },
                 {
                     title: 'Disclaimer',
