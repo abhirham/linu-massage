@@ -1,16 +1,12 @@
-import { createApp } from 'vue'
 import { createStore } from 'vuex'
+
+import userModule from './userModule'
+import notificationModule from './notificationModule'
 
 // Create a new store instance.
 export const store = createStore({
-  state () {
-    return {
-      count: 0
-    }
-  },
-  mutations: {
-    increment (state) {
-      state.count++
-    }
-  }
+    modules: {
+        userModule,
+        notificationModule,
+    },
 })

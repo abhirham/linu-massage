@@ -12,7 +12,7 @@
                     <v-btn
                         @click="$router.push({ name: link.url })"
                         :class="['d-none d-md-block', link.class]"
-                        variant="text"
+                        :variant="link.variant ?? 'text'"
                         >{{ link.title }}</v-btn
                     >
                 </template>
@@ -72,8 +72,15 @@ export default {
                 'separator',
                 {
                     title: 'Login',
-                    url: '',
+                    url: 'login',
                     class: 'bg-btn-blue',
+                    variant: 'elevated',
+                },
+                {
+                    title: 'Sign up',
+                    url: 'signup',
+                    class: ' ml-3',
+                    variant: 'outlined',
                 },
             ],
         }

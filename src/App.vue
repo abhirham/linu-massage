@@ -2,6 +2,7 @@
     <v-app>
         <Header />
         <v-main>
+            <Alerts></Alerts>
             <RouterView />
         </v-main>
         <v-footer class="bg-primary" app absolute>
@@ -15,12 +16,13 @@
 </template>
 
 <script>
-import { RouterLink, RouterView } from 'vue-router'
-import Header from './components/Header.vue'
+import Header from './components/Header.vue';
+import Alerts from './components/Alerts.vue';
 
 export default {
     components: {
         Header,
+        Alerts,
     },
-}
+};
 </script>

@@ -17,7 +17,7 @@
         <h3 class="mt-10 font-weight-medium">Course Outline</h3>
 
         <template v-for="(item, idx) in content" :key="item.title">
-            <div>
+            <div class="mt-2">
                 <h2>Module {{ idx + 1 }}: {{ item.title }}</h2>
                 <p>{{ item.description }}</p>
                 <p
