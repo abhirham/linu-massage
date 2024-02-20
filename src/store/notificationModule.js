@@ -5,14 +5,14 @@ export default {
         return {
             alertMessage: '',
             error: false,
-        }
+        };
     },
     mutations: {
         setAlert(state, { alertMessage, error = false }) {
-            state.alertMessage = alertMessage
-            state.error = error
+            state.alertMessage = alertMessage;
+            state.error = error;
         },
     },
     getters: {},
     actions: {},
-}
+};

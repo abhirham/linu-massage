@@ -1,9 +1,5 @@
-import { auth, db } from '@/libs/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-
-const erroCodeToMessageObj = {
-    'auth/email-already-in-use': 'Email is already in use. Please Login',
-};
+import { db } from '@/libs/firebase';
+import User from '@/models/User';
 
 export default {
     name: 'userModule',
@@ -12,43 +8,29 @@ export default {
         user: {},
     }),
     mutations: {
-        setUser({ state }, payload) {
-            state.user = payload;
+        setUser(state, payload) {
+            state.user = new User(payload);
         },
     },
     actions: {
-        async signupWithEmailAndPW(
-            { commit },
-            { email, password, firstname, lastnam }
-        ) {
-            try {
-                let result = await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-
-                let { uid } = result.user;
-
-                let userObj = { uid, email, firstname, lastnam };
-
-                await db.collection('users').doc(uid).set(userObj);
-            } catch (error) {
-                let message = erroCodeToMessageObj[error.code];
-
-                if (message !== undefined) {
-                    throw message;
-                }
-
-                commit(
-                    'notificationModule/setAlert',
-                    {
-                        alertMessage: error.message,
-                        error: true,
-                    },
-                    { root: true }
-                );
-            }
+        createUserToDB({ commit }, payload) {
+            return db.collection('users').doc(payload.uid).set(payload);
+        },
+        fetchUserById({ commit }, uid) {
+            return db
+                .collection('users')
+                .doc(uid)
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        return doc.data();
+                    } else {
+                        throw { message: 'User not found.' };
+                    }
+                })
+                .catch((e) => {
+                    throw e.message;
+                });
         },
     },
 };

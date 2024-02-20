@@ -1,42 +1,82 @@
 <template>
-    <div>
-        <div id="firebaseui-auth-container"></div>
-    </div>
+    <v-container fluid class="fill-height">
+        <v-row justify="center" align="center" class="fill-height">
+            <v-col cols="12" lg="4" sm="8">
+                <p class="text-h5 mb-4">
+                    Log in to Healing Touch Spa & Wellness Centre
+                </p>
+                <v-form @submit.prevent="onSubmit" v-model="isValid">
+                    <v-text-field
+                        type="email"
+                        v-model="email"
+                        label="Email"
+                        :rules="validation_rules.email"
+                        variant="outlined"
+                        class="mb-2"
+                        hide-details="auto"
+                    ></v-text-field>
+                    <v-text-field
+                        v-model="password"
+                        label="Password"
+                        type="password"
+                        :rules="validation_rules.password"
+                        variant="outlined"
+                        class="mb-2"
+                        hide-details="auto"
+                    ></v-text-field>
+                    <v-btn
+                        type="submit"
+                        :loading="loading"
+                        block
+                        color="primary"
+                        class="mt-5"
+                        >Log in</v-btn
+                    >
+                </v-form>
+                <div class="text-center mt-3">
+                    Forgot your password?
+                    <router-link
+                        class="text-primary font-weight-black"
+                        :to="{ name: 'forgot-pw' }"
+                        >Click here</router-link
+                    >
+                </div>
+                <v-divider class="my-3" :thickness="2"></v-divider>
+                <div class="text-center">
+                    Don't have an account?
+                    <router-link
+                        class="text-primary font-weight-black"
+                        :to="{ name: 'signup' }"
+                        >Sign up</router-link
+                    >
+                </div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
-import app from '@/libs/firebase'
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
-
-const provider = new GoogleAuthProvider()
-
 export default {
+    inject: ['validation_rules'],
     data() {
-        return {}
+        return { email: '', password: '', loading: false, isValid: false };
     },
-    mounted() {
-        // const auth = getAuth(app)
-        // signInWithPopup(auth, provider)
-        //     .then((result) => {
-        //         // This gives you a Google Access Token. You can use it to access the Google API.
-        //         const credential =
-        //             GoogleAuthProvider.credentialFromResult(result)
-        //         const token = credential.accessToken
-        //         // The signed-in user info.
-        //         const user = result.user
-        //         // IdP data available using getAdditionalUserInfo(result)
-        //         // ...
-        //     })
-        //     .catch((error) => {
-        //         // Handle Errors here.
-        //         const errorCode = error.code
-        //         const errorMessage = error.message
-        //         // The email of the user's account used.
-        //         const email = error.customData.email
-        //         // The AuthCredential type that was used.
-        //         const credential = GoogleAuthProvider.credentialFromError(error)
-        //         // ...
-        //     })
+    methods: {
+        onSubmit() {
+            this.$store.dispatch('userModule/signinWithGoogle');
+            if (!this.isValid) return;
+
+            let { email, password } = this;
+
+            this.loading = true;
+
+            this.$store
+                .dispatch('userModule/signInWithEmailAndPassword', {
+                    email,
+                    password,
+                })
+                .finally(() => (this.loading = false));
+        },
     },
-}
+};
 </script>

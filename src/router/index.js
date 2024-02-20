@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,7 +34,13 @@ const router = createRouter({
             name: 'signup',
             component: () => import('@/components/pages/SignUp.vue'),
         },
-    ],
-})
 
-export default router
+        {
+            path: '/forgot-password',
+            name: 'forgot-pw',
+            component: () => import('@/components/pages/SignUp.vue'),
+        },
+    ],
+});
+
+export default router;

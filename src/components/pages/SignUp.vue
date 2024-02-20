@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="fill-height">
         <v-row justify="center" align="center" class="fill-height">
             <v-col cols="12" lg="4" sm="8">
                 <p class="text-h5 mb-4">Sign up and start learning</p>
@@ -13,11 +13,11 @@
                         <div v-html="alertError"></div>
                     </template>
                 </v-alert>
-                <v-form @submit.prevent="onSubmit">
+                <v-form @submit.prevent="onSubmit" v-model="isValid">
                     <v-text-field
                         v-model="firstname"
                         label="First name"
-                        :rules="rules.required"
+                        :rules="validation_rules.required"
                         variant="outlined"
                         class="mb-2"
                         hide-details="auto"
@@ -25,7 +25,7 @@
                     <v-text-field
                         v-model="lastname"
                         label="Last name"
-                        :rules="rules.required"
+                        :rules="validation_rules.required"
                         variant="outlined"
                         class="mb-2"
                         hide-details="auto"
@@ -34,7 +34,7 @@
                         type="email"
                         v-model="email"
                         label="Email"
-                        :rules="rules.email"
+                        :rules="validation_rules.email"
                         variant="outlined"
                         class="mb-2"
                         hide-details="auto"
@@ -43,7 +43,7 @@
                         v-model="password"
                         label="Password"
                         type="password"
-                        :rules="rules.required"
+                        :rules="validation_rules.password"
                         variant="outlined"
                         class="mb-2"
                         hide-details="auto"
@@ -69,6 +69,7 @@
 
 <script>
 export default {
+    inject: ['validation_rules'],
     data() {
         return {
             firstname: '',
@@ -77,27 +78,13 @@ export default {
             password: '',
             loading: false,
             alertError: '',
-            rules: {
-                required: [
-                    (val) => {
-                        if (val) return true;
-
-                        return 'This field cannot be empty.';
-                    },
-                ],
-                email: [
-                    (val) => {
-                        if (/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test(val))
-                            return true;
-
-                        return 'Invalid email.';
-                    },
-                ],
-            },
+            isValid: false,
         };
     },
     methods: {
-        onSubmit() {
+        async onSubmit() {
+            if (!this.isValid) return;
+
             this.loading = true;
             let { firstname, lastname, email, password } = this;
 

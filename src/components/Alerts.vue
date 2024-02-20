@@ -20,28 +20,27 @@
             </div>
         </div>
         <template v-slot:actions>
-            <v-btn icon="mdi-close" variant="button" @click="showAlert = false">
-            </v-btn>
+            <v-btn icon="mdi-close" @click="showAlert = false"> </v-btn>
         </template>
     </v-snackbar>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
     computed: {
         ...mapState('notificationModule', ['alertMessage', 'error']),
         showAlert: {
             get() {
-                return this.alertMessage.length > 0
+                return this.alertMessage.length > 0;
             },
             set() {
                 this.$store.commit('notificationModule/setAlert', {
                     alertMessage: '',
-                })
+                });
             },
         },
     },
-}
+};
 </script>
