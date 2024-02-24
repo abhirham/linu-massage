@@ -9,7 +9,7 @@ export default {
     }),
     mutations: {
         setUser(state, payload) {
-            state.user = new User(payload);
+            state.user = payload;
         },
     },
     actions: {
@@ -23,7 +23,8 @@ export default {
                 .get()
                 .then((doc) => {
                     if (doc.exists) {
-                        return doc.data();
+                        let userObj = new User(doc.data());
+                        return userObj.to_json();
                     } else {
                         throw { message: 'User not found.' };
                     }

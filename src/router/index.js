@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { store } from '@/store';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,20 +26,21 @@ const router = createRouter({
             component: () => import('@/components/pages/Rewards.vue'),
         },
         {
-            path: '/login',
-            name: 'login',
-            component: () => import('@/components/pages/Login.vue'),
-        },
-        {
-            path: '/signup',
-            name: 'signup',
-            component: () => import('@/components/pages/SignUp.vue'),
-        },
+            path: '/admin',
+            name: 'admin',
+            component: () => import('@/components/pages/Admin.vue'),
+            beforeEnter(to, from, next) {
+                if (store.state.userModule.user.isAdmin) {
+                    return next();
+                }
 
+                return next({ name: 'NotFound' });
+            },
+        },
         {
-            path: '/forgot-password',
-            name: 'forgot-pw',
-            component: () => import('@/components/pages/SignUp.vue'),
+            path: '/:pathMatch(.*)*',
+            name: 'NotFound',
+            component: () => import('@/components/pages/NotFound.vue'),
         },
     ],
 });

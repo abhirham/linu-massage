@@ -35,7 +35,11 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="justify-end">
-                <v-btn variant="elevated" color="btn-blue" @click="onSubmit"
+                <v-btn
+                    variant="elevated"
+                    color="btn-blue"
+                    :loading="loading"
+                    @click="onSubmit"
                     >save</v-btn
                 >
             </v-card-actions>
@@ -50,27 +54,44 @@ import User from '@/models/User';
 export default {
     inject: ['validation_rules'],
     data() {
-        return { firstname: '', lastname: '' };
+        return { firstname: '', lastname: '', loading: false };
     },
     methods: {
         async onSubmit() {
-            console.log(auth.currentUser.email);
-            let { valid } = this.$refs.form.validate();
+            let { valid } = await this.$refs.form.validate();
+
+            let { uid, email } = auth.currentUser;
 
             if (!valid) return;
 
-            let { firstname, lastname } = this;
-            let { uid, email } = auth.currentUser;
+            let userObj = new User({
+                ...this,
+                uid,
+                email,
+            });
 
-            this.$store.dispatch(
-                'userModule/createUserToDB',
-                new User({
-                    firstname,
-                    lastname,
-                    uid,
-                    email,
-                })
-            );
+            this.loading = true;
+            try {
+                await this.$store.dispatch(
+                    'userModule/createUserToDB',
+                    userObj.to_json()
+                );
+
+                this.$store.commit('userModule/setUser', userObj.to_json());
+
+                this.$emit('complete');
+            } catch (e) {
+                this.$store.commit(
+                    'notificationModule/setAlert',
+                    {
+                        alertMessage: e.message,
+                        error: true,
+                    },
+                    { root: true }
+                );
+            } finally {
+                this.loading = false;
+            }
         },
     },
 };

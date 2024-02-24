@@ -61,9 +61,22 @@ export default {
         },
         signinWithGoogle() {
             let provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
-                .then(console.log)
-                .catch(console.error);
+            auth.signInWithPopup(provider).catch((e) =>
+                console.error('came here', e)
+            );
+        },
+        signout() {
+            return auth.signOut().catch((error) => {
+                commit(
+                    'notificationModule/setAlert',
+                    {
+                        alertMessage:
+                            'Something went wrong. Please refresh the page.',
+                        error: true,
+                    },
+                    { root: true }
+                );
+            });
         },
     },
 };
