@@ -41,11 +41,13 @@ export default {
         };
     },
     mounted() {
-        console.log('came here');
         auth.onAuthStateChanged((user) => {
             if (user) {
                 this.$store
-                    .dispatch('userModule/fetchUserById', user.uid)
+                    .dispatch('userModule/fetchUserById', {
+                        uid: user.uid,
+                        handleError: false,
+                    })
                     .then((res) => {
                         this.$store.commit('userModule/setUser', res);
                         this.$router.push({ name: this.$route.name });

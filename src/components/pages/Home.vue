@@ -32,7 +32,9 @@
                 >
                     <v-card variant="outlined" class="border-0">
                         <v-img
-                            src="https://d31ezp3r8jwmks.cloudfront.net/p0jod2nhkm5c7x8mggzuz0b91zb5"
+                            cover
+                            :aspect-ratio="16 / 9"
+                            :src="course.imageUrl"
                         ></v-img>
                         <v-card-item>
                             <div
@@ -183,9 +185,14 @@ export default {
                     id: 'Practice-in-a-Self-Reflective-Manner',
                 },
             ],
-        }
+        };
     },
-}
+    mounted() {
+        this.$store.dispatch('courseModule/fetchCoursesFromDB').then((res) => {
+            this.courses = res;
+        });
+    },
+};
 </script>
 
 <style scoped>

@@ -2,31 +2,54 @@
     <v-dialog
         v-model="dialog"
         fullscreen
+        persistent
         :scrim="false"
         transition="dialog-bottom-transition"
     >
         <v-card>
-            <v-toolbar dark color="primary">
-                <v-btn icon dark @click="dialog = false">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-                <v-spacer />
-                <v-btn
-                    class="bg-btn-blue mr-3"
-                    prepend-icon="mdi-content-save"
-                    variant="elevated"
-                    >Save</v-btn
-                >
-                <v-form></v-form>
-            </v-toolbar>
-            <v-form>
+            <v-form v-model="isValid" ref="form" @submit.prevent="onSubmit">
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-spacer />
+                    <v-btn
+                        class="bg-btn-blue mr-3"
+                        prepend-icon="mdi-content-save"
+                        variant="elevated"
+                        type="submit"
+                        :loading="uploadingFile"
+                        >Save</v-btn
+                    >
+                </v-toolbar>
                 <v-container>
                     <v-row>
+                        <v-col cols="12" sm="6"
+                            ><v-file-input
+                                label="Course Image"
+                                variant="outlined"
+                                prepend-icon="mdi-image"
+                                accept=".jpg,.png,.svg"
+                                v-model="image"
+                                :rules="validation_rules.required"
+                            ></v-file-input
+                        ></v-col>
+                        <v-col cols="12" sm="6"
+                            ><v-file-input
+                                label="Course PDF"
+                                variant="outlined"
+                                prepend-icon="mdi-file-pdf-box"
+                                accept=".pdf"
+                                v-model="pdf"
+                                :rules="validation_rules.required"
+                            ></v-file-input
+                        ></v-col>
                         <v-col>
                             <v-text-field
                                 label="Title"
                                 variant="outlined"
                                 v-model="title"
+                                :rules="validation_rules.required"
                             />
                         </v-col>
                         <v-col cols="12" sm="3">
@@ -35,6 +58,7 @@
                                 variant="outlined"
                                 type="number"
                                 v-model="price"
+                                :rules="validation_rules.required"
                             />
                         </v-col>
                         <v-col cols="12" sm="3">
@@ -43,6 +67,7 @@
                                 variant="outlined"
                                 type="number"
                                 v-model="lessons"
+                                :rules="validation_rules.required"
                             />
                         </v-col>
                     </v-row>
@@ -59,7 +84,6 @@
                         variant="outlined"
                     >
                         <v-card-title class="d-flex">
-                            Module {{ idx + 1 }}
                             <v-spacer />
                             <v-btn
                                 color="btn-blue"
@@ -77,11 +101,13 @@
                                 label="Title"
                                 variant="outlined"
                                 v-model="module.title"
+                                :rules="validation_rules.required"
                             ></v-text-field>
                             <v-textarea
                                 label="Description"
                                 variant="outlined"
                                 v-model="module.description"
+                                :rules="validation_rules.required"
                             ></v-textarea>
 
                             <v-text-field
@@ -89,6 +115,7 @@
                                 :key="`c-${idx}`"
                                 prepend-icon="mdi-circle-medium"
                                 append-icon="mdi-trash-can-outline"
+                                :rules="validation_rules.required"
                                 @click:append="
                                     module.contents = module.contents.filter(
                                         (x, i) => i !== idx
@@ -104,6 +131,7 @@
                             <v-btn
                                 color="btn-blue"
                                 @click="module.contents.push('')"
+                                prepend-icon="mdi-plus"
                                 >Add Content</v-btn
                             >
                         </v-card-actions>
@@ -122,6 +150,7 @@
 
 <script>
 export default {
+    inject: ['validation_rules'],
     props: ['modelValue'],
     emits: ['update:modelValue'],
     computed: {
@@ -135,7 +164,16 @@ export default {
         },
     },
     data() {
-        return { title: '', price: '', lessons: '', modules: [] };
+        return {
+            title: '',
+            price: '',
+            lessons: '',
+            modules: [],
+            isValid: false,
+            image: [],
+            pdf: [],
+            uploadingFile: false,
+        };
     },
     methods: {
         addModule() {
@@ -143,6 +181,25 @@ export default {
                 ...this.modules,
                 { title: '', description: '', contents: [''] },
             ];
+        },
+        async onSubmit() {
+            // if (!this.isValid) return;
+            this.uploadingFile = true;
+            let { title, price, lessons, modules, image, pdf } = this;
+
+            this.$store
+                .dispatch('courseModule/addCourseToDB', {
+                    title,
+                    price,
+                    lessons,
+                    modules,
+                    image,
+                    pdf,
+                })
+                .finally(() => (this.uploadingFile = false));
+        },
+        onSaveClick() {
+            this.$refs.form.submit();
         },
     },
     mounted() {

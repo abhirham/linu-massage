@@ -16,7 +16,7 @@ export default {
         createUserToDB({ commit }, payload) {
             return db.collection('users').doc(payload.uid).set(payload);
         },
-        fetchUserById({ commit }, uid) {
+        fetchUserById({ commit }, { uid }) {
             return db
                 .collection('users')
                 .doc(uid)
