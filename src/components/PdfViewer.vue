@@ -20,7 +20,7 @@ export default {
         const url =
             'https://firebasestorage.googleapis.com/v0/b/healing-touch-spa.appspot.com/o/pdfs%2FhCOgCNONwUqziJ8mlAyE.pdf?alt=media&token=768b900e-18a5-41e5-8969-2f83ecbe35f2';
 
-        const loadingTask = pdfjsLib.getDocument('url');
+        const loadingTask = pdfjsLib.getDocument(url);
 
         loadingTask.promise.then((pdf) => {
             const pageNum = 1;
