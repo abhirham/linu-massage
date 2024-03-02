@@ -45,5 +45,30 @@ export default {
             let fileRef = storageRef.child(`${folder}/${name}${ext[folder]}`);
             return fileRef.put(file).then((res) => fileRef.getDownloadURL());
         },
+        fetchCourseById(_, { id }) {
+            return db
+                .collection('courses')
+                .doc(id)
+                .get()
+                .then((res) => ({ data: res.data(), exists: res.exists }));
+        },
+        async deleteCourseById({}, { id }) {
+            let promiseArr = [
+                db.collection('courses').doc(id).delete(),
+
+                storageRef.child(`images/${id}.jpeg`).delete(),
+                storageRef.child(`pdfs/${id}.pdf`).delete(),
+            ];
+
+            db.collection('courses')
+                .doc(id)
+                .collection('resources')
+                .get()
+                .then((res) => {
+                    res.forEach((x) => promiseArr.push(x.ref.delete()));
+                });
+
+            return Promise.all(promiseArr);
+        },
     },
 };

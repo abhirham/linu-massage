@@ -183,7 +183,8 @@ export default {
             ];
         },
         async onSubmit() {
-            // if (!this.isValid) return;
+            if (!this.isValid) return;
+
             this.uploadingFile = true;
             let { title, price, lessons, modules, image, pdf } = this;
 
@@ -196,7 +197,13 @@ export default {
                     image,
                     pdf,
                 })
-                .finally(() => (this.uploadingFile = false));
+                .finally(() => {
+                    this.uploadingFile = false;
+                    this.dialog = false;
+                    this.$store.commit('notificationModule/setAlert', {
+                        alertMessage: 'Course has been added successfully.',
+                    });
+                });
         },
         onSaveClick() {
             this.$refs.form.submit();

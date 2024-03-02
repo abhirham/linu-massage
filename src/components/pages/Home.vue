@@ -22,7 +22,10 @@
     <div class="bg-primary">
         <v-container>
             <h1 class="mb-5">All Courses</h1>
-            <v-row>
+            <p v-if="courses.length === 0">
+                Looks like there are no courses added yet.
+            </p>
+            <v-row v-else>
                 <v-col
                     cols="12"
                     md="4"
@@ -30,34 +33,20 @@
                     v-for="(course, idx) in courses"
                     :key="idx"
                 >
-                    <v-card variant="outlined" class="border-0">
-                        <v-img
-                            cover
-                            :aspect-ratio="16 / 9"
-                            :src="course.imageUrl"
-                        ></v-img>
-                        <v-card-item>
-                            <div
-                                class="font-weight-bold course-price mb-1 text-secondary"
+                    <CourseCard v-bind="course">
+                        <template #actions>
+                            <v-btn
+                                @click="
+                                    $router.push({
+                                        name: 'view-course',
+                                        params: { courseName: course.id },
+                                    })
+                                "
+                                class="bg-btn-blue"
+                                >view course</v-btn
                             >
-                                ${{ course.price }} CAD
-                            </div>
-                            <div class="text-h6 mb-1">{{ course.title }}</div>
-                            <div>Course {{ course.lessons }} Lessons</div>
-                            <v-card-actions>
-                                <v-btn
-                                    @click="
-                                        $router.push({
-                                            name: 'view-course',
-                                            params: { courseName: course.id },
-                                        })
-                                    "
-                                    class="bg-btn-blue"
-                                    >view course</v-btn
-                                >
-                            </v-card-actions>
-                        </v-card-item>
-                    </v-card>
+                        </template>
+                    </CourseCard>
                 </v-col>
             </v-row>
         </v-container>
@@ -72,119 +61,12 @@
 </template>
 
 <script>
+import CourseCard from '../CourseCard.vue';
 export default {
+    components: { CourseCard },
     data() {
         return {
-            courses: [
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-                {
-                    title: 'Strive 15: Practice in a Self-Reflective Manner',
-                    price: '99.99',
-                    lessons: 33,
-                    id: 'Practice-in-a-Self-Reflective-Manner',
-                },
-            ],
+            courses: [],
         };
     },
     mounted() {

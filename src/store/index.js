@@ -17,7 +17,7 @@ const store = createStore({
 
 store.subscribeAction({
     error: (action, __, e) => {
-        if (action.payload.handleError === false) return;
+        if (action.payload?.handleError === false) return;
 
         store.commit('notificationModule/setAlert', {
             alertMessage: e.message,
