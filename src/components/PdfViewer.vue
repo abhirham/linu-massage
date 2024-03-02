@@ -5,7 +5,7 @@
 <script>
 // import pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import * as pdfjsLib from '@/libs/pdfjs/pdf';
-pdfjsLib.GlobalWorkerOptions.workerSrc = '@/libs/pdfjs/pdf.worker';
+pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.mjs';
 
 // import * as pdfWorker from "pdfjs-dist/build/pdf.worker.mjs";
 // import { PDFViewer } from 'pdfjs-dist/web/pdf_viewer';
@@ -17,7 +17,6 @@ export default {
     },
 
     mounted() {
-        return;
         const url =
             'https://firebasestorage.googleapis.com/v0/b/healing-touch-spa.appspot.com/o/pdfs%2FhCOgCNONwUqziJ8mlAyE.pdf?alt=media&token=768b900e-18a5-41e5-8969-2f83ecbe35f2';
         const loadingTask = pdfjsLib.getDocument(url);
