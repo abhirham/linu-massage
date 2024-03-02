@@ -63,15 +63,18 @@
         </v-window>
     </v-container>
     <AddCourse v-model="showAddCourse" />
+    <PdfViewer />
 </template>
 
 <script>
 import AddCourse from '../AddCourse.vue';
 import CourseCard from '../CourseCard.vue';
+import PdfViewer from '../PdfViewer.vue';
+
 import Swal from 'sweetalert2';
 
 export default {
-    components: { AddCourse, CourseCard },
+    components: { AddCourse, CourseCard, PdfViewer },
     data() {
         return {
             tab: 'course',
