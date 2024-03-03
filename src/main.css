@@ -19,3 +19,8 @@ h1 {
     font-style: normal;
     font-size: 56px;
 }
+
+
+.swal2-container {
+    z-index: 2500;
+}

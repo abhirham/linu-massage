@@ -19,7 +19,10 @@ export default {
 
             return Promise.all([
                 docRef.set({ ...payload, imageUrl, id: docRef.id }),
-                docRef.collection('resources').add({ pdf: pdfUrl }),
+                docRef
+                    .collection('resources')
+                    .doc('resources')
+                    .set({ pdf: pdfUrl }),
             ]);
         },
         fetchCoursesFromDB() {
@@ -69,6 +72,22 @@ export default {
                 });
 
             return Promise.all(promiseArr);
+        },
+        fetchPDFResources({}, { id }) {
+            return db
+                .collection('courses')
+                .doc(id)
+                .collection('resources')
+                .doc('resources')
+                .get()
+                .then((res) => {
+                    if (!res.exists)
+                        throw {
+                            message:
+                                'The resource you are looking for doesnt exist.',
+                        };
+                    return res.data();
+                });
         },
     },
 };

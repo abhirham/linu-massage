@@ -1,52 +1,69 @@
 <template>
-    <div id="pdf-container"></div>
+    <v-dialog
+        v-model="dialog"
+        fullscreen
+        persistent
+        no-click-animation
+        :scrim="false"
+        transition="dialog-bottom-transition"
+    >
+        <v-card>
+            <v-toolbar dark color="primary">
+                <v-btn icon dark @click="$emit('close')">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-spacer />
+            </v-toolbar>
+            <div
+                id="pdf-container"
+                class="d-flex flex-wrap justify-content-center"
+            ></div>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script>
-// import pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import * as pdfjsLib from '@/libs/pdfjs/pdf';
 pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.mjs';
 
-// import * as pdfWorker from "pdfjs-dist/build/pdf.worker.mjs";
-// import { PDFViewer } from 'pdfjs-dist/web/pdf_viewer';
-// import 'pdfjs-dist/web/pdf_viewer.css';
-
 export default {
+    props: ['url'],
     data() {
-        return {};
+        return { dialog: false };
     },
-
     mounted() {
-        const url =
-            'https://firebasestorage.googleapis.com/v0/b/healing-touch-spa.appspot.com/o/pdfs%2FhCOgCNONwUqziJ8mlAyE.pdf?alt=media&token=768b900e-18a5-41e5-8969-2f83ecbe35f2';
-
-        const loadingTask = pdfjsLib.getDocument(url);
+        this.dialog = true;
+        const loadingTask = pdfjsLib.getDocument(this.url);
 
         loadingTask.promise.then((pdf) => {
-            const pageNum = 1;
-            pdf.getPage(pageNum).then((page) => {
-                // 1. Get a viewport for the desired scale
-                const scale = 1.5; // Adjust as needed
-                const viewport = page.getViewport({ scale });
+            Promise.all(
+                [3, 1, 2].map((x) => {
+                    return pdf.getPage(x).then((page) => {
+                        const scale = 1.5; // Adjust as needed
+                        const viewport = page.getViewport({ scale });
 
-                // 2. Prepare a canvas for rendering
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
 
-                // 3. Render the page on the canvas
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport,
-                };
-                page.render(renderContext).promise.then(() => {
-                    // 4. Append the canvas to your container
-                    document
-                        .getElementById('pdf-container')
-                        .appendChild(canvas);
-                });
-            });
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport,
+                        };
+
+                        return page
+                            .render(renderContext)
+                            .promise.then(() => canvas);
+                    });
+                })
+            )
+                .then((res) => {
+                    res.forEach((x) => {
+                        document.getElementById('pdf-container').appendChild(x);
+                    });
+                })
+                .finally(() => this.$swal.close());
         });
     },
 };

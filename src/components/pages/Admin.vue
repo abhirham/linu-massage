@@ -43,7 +43,12 @@
                         </v-card>
                     </template>
                     <template #item.pdf="{ item }">
-                        <v-btn color="primary" size="small">View</v-btn>
+                        <v-btn
+                            color="primary"
+                            size="small"
+                            @click="showPDF(item)"
+                            >View 23</v-btn
+                        >
                     </template>
                     <template #item.actions="{ item }">
                         <v-icon
@@ -63,7 +68,11 @@
         </v-window>
     </v-container>
     <AddCourse v-model="showAddCourse" />
-    <PdfViewer />
+    <PdfViewer
+        @close="PDFViewerData.url = undefined"
+        v-if="PDFViewerData.url"
+        :url="PDFViewerData.url"
+    />
 </template>
 
 <script>
@@ -71,7 +80,7 @@ import AddCourse from '../AddCourse.vue';
 import CourseCard from '../CourseCard.vue';
 import PdfViewer from '../PdfViewer.vue';
 
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 
 export default {
     components: { AddCourse, CourseCard, PdfViewer },
@@ -79,6 +88,7 @@ export default {
         return {
             tab: 'course',
             showAddCourse: false,
+            PDFViewerData: {},
             courses: [],
             search: '',
             headers: [
@@ -92,30 +102,45 @@ export default {
     },
     methods: {
         deleteItem(item) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `Do you want to delete '${item.title}'?`,
-                icon: 'warning',
-                confirmButtonText: 'Delete',
-            }).then((res) => {
-                if (!res.isConfirmed) return;
-                Swal.fire({ text: 'Loading...', allowOutsideClick: false });
-                Swal.showLoading();
+            this.$swal
+                .fire({
+                    title: 'Are you sure?',
+                    text: `Do you want to delete '${item.title}'?`,
+                    icon: 'warning',
+                    confirmButtonText: 'Delete',
+                })
+                .then((res) => {
+                    if (!res.isConfirmed) return;
+                    this.$swal.fire({
+                        text: 'Loading...',
+                        allowOutsideClick: false,
+                    });
+                    this.$swal.showLoading();
 
-                this.$store
-                    .dispatch('courseModule/deleteCourseById', {
-                        id: item.id,
-                    })
-                    .then((res) => {
-                        this.courses = this.courses.filter(
-                            (x) => x.id !== item.id
-                        );
-                        this.$store.commit('notificationModule/setAlert', {
-                            alertMessage: 'Course has been deleted.',
-                        });
-                    })
-                    .finally(() => Swal.close());
-            });
+                    this.$store
+                        .dispatch('courseModule/deleteCourseById', {
+                            id: item.id,
+                        })
+                        .then((res) => {
+                            this.courses = this.courses.filter(
+                                (x) => x.id !== item.id
+                            );
+                            this.$store.commit('notificationModule/setAlert', {
+                                alertMessage: 'Course has been deleted.',
+                            });
+                        })
+                        .finally(() => this.$swal.close());
+                });
+        },
+        showPDF({ id }) {
+            this.$swal.showLoading();
+            this.$store
+                .dispatch('courseModule/fetchPDFResources', { id })
+                .then((res) => {
+                    this.PDFViewerData = { url: res.pdf };
+                    this.showPDFViewer = true;
+                })
+                .catch(() => this.$swal.close());
         },
     },
     mounted() {

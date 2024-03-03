@@ -4,6 +4,7 @@
         content-class="bg-white"
         location="top right"
         timeout="-1"
+        z-index="2500"
     >
         <div class="d-flex align-center">
             <v-icon class="mr-3" :color="error ? 'error' : 'success'" size="25"
