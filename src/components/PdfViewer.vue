@@ -16,11 +16,18 @@
             </v-toolbar>
             <div
                 id="pdf-container"
-                class="d-flex flex-wrap justify-content-center"
+                class="d-flex flex-wrap justify-center"
             ></div>
         </v-card>
     </v-dialog>
 </template>
+
+<style scoped>
+#pdf-container {
+    gap: 20px 2px;
+    background: #202124;
+}
+</style>
 
 <script>
 import * as pdfjsLib from '@/libs/pdfjs/pdf';
@@ -37,8 +44,8 @@ export default {
 
         loadingTask.promise.then((pdf) => {
             Promise.all(
-                [3, 1, 2].map((x) => {
-                    return pdf.getPage(x).then((page) => {
+                new Array(pdf.numPages).fill().map((_, x) => {
+                    return pdf.getPage(x + 1).then((page) => {
                         const scale = 1.5; // Adjust as needed
                         const viewport = page.getViewport({ scale });
 

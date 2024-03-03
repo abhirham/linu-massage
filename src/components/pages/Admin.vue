@@ -47,7 +47,7 @@
                             color="primary"
                             size="small"
                             @click="showPDF(item)"
-                            >View 23</v-btn
+                            >View</v-btn
                         >
                     </template>
                     <template #item.actions="{ item }">
