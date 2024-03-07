@@ -10,7 +10,7 @@
             <Alerts></Alerts>
             <RouterView />
         </v-main>
-        <v-footer class="bg-primary" app absolute>
+        <v-footer class="bg-primary">
             <v-container>
                 <v-btn variant="text">about</v-btn>
                 <v-btn variant="text">disclaimer</v-btn>

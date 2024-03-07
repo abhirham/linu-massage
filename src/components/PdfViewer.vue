@@ -26,12 +26,12 @@
 #pdf-container {
     gap: 20px 2px;
     background: #202124;
+    max-width: 100vw;
 }
 </style>
 
 <script>
-import * as pdfjsLib from '@/libs/pdfjs/pdf';
-pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 
 export default {
     props: ['url'],
@@ -47,7 +47,33 @@ export default {
                 new Array(pdf.numPages).fill().map((_, x) => {
                     return pdf.getPage(x + 1).then((page) => {
                         const scale = 1.5; // Adjust as needed
-                        const viewport = page.getViewport({ scale });
+                        const viewport = page.getViewport({
+                            scale: calculateScale(),
+                        });
+
+                        function calculateScale() {
+                            const containerWidth =
+                                document.getElementById(
+                                    'pdf-container'
+                                ).clientWidth;
+                            let desiredWidth = containerWidth - 20;
+
+                            const maxScale = 1.5; // Maximum zoom-in
+                            const minScale = 0.7; // Maximum zoom-out
+                            const originalWidth = page.view[2];
+
+                            // Ensure desiredWidth doesn't lead to a scale beyond our limits
+                            if (desiredWidth / originalWidth > maxScale) {
+                                desiredWidth = originalWidth * maxScale;
+                            } else if (
+                                desiredWidth / originalWidth <
+                                minScale
+                            ) {
+                                desiredWidth = originalWidth * minScale;
+                            }
+
+                            return desiredWidth / page.view[2];
+                        }
 
                         const canvas = document.createElement('canvas');
                         const context = canvas.getContext('2d');

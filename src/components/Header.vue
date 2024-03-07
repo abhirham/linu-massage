@@ -2,7 +2,7 @@
     <div class="bg-primary py-10 px-5">
         <v-container class="align-self-center">
             <v-row class="align-center">
-                <v-img height="150" src="/src/assets/logo.svg"></v-img>
+                <v-img height="150" src="/logo.svg"></v-img>
                 <v-spacer></v-spacer>
                 <template v-for="link in links">
                     <v-spacer

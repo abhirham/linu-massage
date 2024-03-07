@@ -26,22 +26,38 @@
                     <v-row>
                         <v-col cols="12" sm="6"
                             ><v-file-input
-                                label="Course Image"
+                                :label="`Course Image${
+                                    courseToEdit ? ' (Optional)' : ''
+                                }`"
                                 variant="outlined"
+                                persistent-hint
+                                :hint="imagePdfHint"
                                 prepend-icon="mdi-image"
                                 accept=".jpg,.png,.svg"
                                 v-model="image"
-                                :rules="validation_rules.required"
+                                :rules="
+                                    courseToEdit
+                                        ? []
+                                        : validation_rules.required
+                                "
                             ></v-file-input
                         ></v-col>
                         <v-col cols="12" sm="6"
                             ><v-file-input
-                                label="Course PDF"
+                                :label="`Course PDF${
+                                    courseToEdit ? ' (Optional)' : ''
+                                }`"
                                 variant="outlined"
+                                persistent-hint
+                                :hint="imagePdfHint"
                                 prepend-icon="mdi-file-pdf-box"
                                 accept=".pdf"
                                 v-model="pdf"
-                                :rules="validation_rules.required"
+                                :rules="
+                                    courseToEdit
+                                        ? []
+                                        : validation_rules.required
+                                "
                             ></v-file-input
                         ></v-col>
                         <v-col>
@@ -151,7 +167,7 @@
 <script>
 export default {
     inject: ['validation_rules'],
-    props: ['modelValue'],
+    props: ['modelValue', 'courseToEdit'],
     emits: ['update:modelValue'],
     computed: {
         dialog: {
@@ -161,6 +177,11 @@ export default {
             set(val) {
                 this.$emit('update:modelValue', val);
             },
+        },
+        imagePdfHint() {
+            return this.courseToEdit === null
+                ? ''
+                : 'Only upload a new file if you want to replace the existing one.';
         },
     },
     data() {
@@ -173,9 +194,38 @@ export default {
             image: [],
             pdf: [],
             uploadingFile: false,
+            id: undefined,
         };
     },
+    watch: {
+        modelValue(val) {
+            if (!val) {
+                this.setup({});
+                return;
+            }
+            if (this.courseToEdit === null) return;
+
+            this.setup(this.courseToEdit);
+        },
+    },
     methods: {
+        setup({
+            lessons = '',
+            modules = [],
+            price = '',
+            title = '',
+            id = undefined,
+            image = [],
+            pdf = [],
+        }) {
+            this.lessons = lessons;
+            this.modules = modules;
+            this.price = price;
+            this.title = title;
+            this.id = id;
+            this.image = image;
+            this.pdf = pdf;
+        },
         addModule() {
             this.modules = [
                 ...this.modules,
@@ -186,7 +236,7 @@ export default {
             if (!this.isValid) return;
 
             this.uploadingFile = true;
-            let { title, price, lessons, modules, image, pdf } = this;
+            let { title, price, lessons, modules, image, pdf, id } = this;
 
             this.$store
                 .dispatch('courseModule/addCourseToDB', {
@@ -196,12 +246,16 @@ export default {
                     modules,
                     image,
                     pdf,
+                    id,
                 })
                 .finally(() => {
                     this.uploadingFile = false;
                     this.dialog = false;
+                    this.$emit('complete');
                     this.$store.commit('notificationModule/setAlert', {
-                        alertMessage: 'Course has been added successfully.',
+                        alertMessage: `Course has been ${
+                            this.courseToEdit === null ? 'added' : 'edited'
+                        } successfully.`,
                     });
                 });
         },

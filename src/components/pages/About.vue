@@ -1,9 +1,9 @@
 <template>
-    <div class="blue-bg fill-height">
-        <v-container class="fill-height">
+    <div class="blue-bg py-16">
+        <v-container>
             <v-row justify="center" align="center">
                 <v-col cols="12" md="5">
-                    <v-img height="300" src="/src/assets/logo.svg"></v-img>
+                    <v-img height="300" src="/logo.svg"></v-img>
                 </v-col>
                 <v-col cols="12" md="5">
                     <h1>About Us</h1>
@@ -27,9 +27,9 @@
 <script>
 export default {
     data() {
-        return {}
+        return {};
     },
-}
+};
 </script>
 
 <style scoped>

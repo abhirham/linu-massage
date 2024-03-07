@@ -1,4 +1,5 @@
 import { db, storageRef } from '@/libs/firebase';
+import moment from 'moment';
 
 export default {
     name: 'courseModule',
@@ -6,8 +7,11 @@ export default {
     state: () => ({}),
     mutations: {},
     actions: {
-        async addCourseToDB({ dispatch }, { image, pdf, ...payload }) {
-            let docRef = db.collection('courses').doc();
+        async addCourseToDB(
+            { dispatch },
+            { image, pdf, id = undefined, ...payload }
+        ) {
+            let docRef = db.collection('courses').doc(id);
 
             let promiseArr = image
                 .concat(pdf)
@@ -17,13 +21,26 @@ export default {
 
             let [imageUrl, pdfUrl] = await Promise.all(promiseArr);
 
-            return Promise.all([
-                docRef.set({ ...payload, imageUrl, id: docRef.id }),
-                docRef
-                    .collection('resources')
-                    .doc('resources')
-                    .set({ pdf: pdfUrl }),
-            ]);
+            if (id === undefined) {
+                payload.createdAt = moment().format();
+            }
+            payload.updatedAt = moment().format();
+
+            if (imageUrl) payload.imageUrl = imageUrl;
+
+            promiseArr = [
+                docRef.set({ ...payload, id: docRef.id }, { merge: true }),
+            ];
+
+            if (pdfUrl)
+                promiseArr.push(
+                    docRef
+                        .collection('resources')
+                        .doc('resources')
+                        .set({ pdf: pdfUrl }, { merge: true })
+                );
+
+            return Promise.all(promiseArr);
         },
         fetchCoursesFromDB() {
             return db

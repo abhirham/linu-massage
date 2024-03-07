@@ -67,7 +67,12 @@
             <v-window-item value="reports"></v-window-item>
         </v-window>
     </v-container>
-    <AddCourse v-model="showAddCourse" />
+    <AddCourse
+        v-model="showAddCourse"
+        @complete="fetchCoursesFromDB()"
+        @update:modelValue="courseToEdit = null"
+        :courseToEdit="courseToEdit"
+    />
     <PdfViewer
         @close="PDFViewerData.url = undefined"
         v-if="PDFViewerData.url"
@@ -80,14 +85,13 @@ import AddCourse from '../AddCourse.vue';
 import CourseCard from '../CourseCard.vue';
 import PdfViewer from '../PdfViewer.vue';
 
-// import Swal from 'sweetalert2';
-
 export default {
     components: { AddCourse, CourseCard, PdfViewer },
     data() {
         return {
             tab: 'course',
             showAddCourse: false,
+            courseToEdit: null,
             PDFViewerData: {},
             courses: [],
             search: '',
@@ -142,19 +146,20 @@ export default {
                 })
                 .catch(() => this.$swal.close());
         },
+        editItem(item) {
+            this.courseToEdit = item;
+            this.showAddCourse = true;
+        },
+        fetchCoursesFromDB() {
+            this.$store
+                .dispatch('courseModule/fetchCoursesFromDB')
+                .then((res) => {
+                    this.courses = res;
+                });
+        },
     },
     mounted() {
-        this.$store
-            .dispatch('courseModule/fetchCoursesFromDB')
-            .then((res) => {
-                this.courses = res;
-            })
-            .catch((e) => {
-                this.$store.commit('notificationModule/setAlert', {
-                    alertMessage: e.message,
-                    error: true,
-                });
-            });
+        this.fetchCoursesFromDB();
     },
 };
 </script>

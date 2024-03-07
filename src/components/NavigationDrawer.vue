@@ -2,7 +2,7 @@
     <v-navigation-drawer :width="200">
         <v-list>
             <v-list-item
-                prepend-avatar="/src/assets/logo.svg"
+                prepend-avatar="/logo.svg"
                 title="Admin Page"
             ></v-list-item>
             <v-list-item link title="Home"></v-list-item>

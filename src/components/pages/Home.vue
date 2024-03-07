@@ -13,9 +13,7 @@
                 </div>
             </v-col>
             <v-col cols="12" md="5" order-md="3">
-                <v-img
-                    src="https://d31ezp3r8jwmks.cloudfront.net/p0jod2nhkm5c7x8mggzuz0b91zb5"
-                ></v-img>
+                <v-img src="/home.jpeg"></v-img>
             </v-col>
         </v-row>
     </v-container>
@@ -39,7 +37,7 @@
                                 @click="
                                     $router.push({
                                         name: 'view-course',
-                                        params: { courseName: course.id },
+                                        params: { courseId: course.id },
                                     })
                                 "
                                 class="bg-btn-blue"
