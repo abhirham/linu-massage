@@ -4,11 +4,7 @@
             <v-row class="align-center">
                 <v-img height="150" src="/logo.svg"></v-img>
                 <v-spacer></v-spacer>
-                <template v-for="link in links">
-                    <v-spacer
-                        v-if="link === 'separator'"
-                        class="d-none d-md-block"
-                    ></v-spacer>
+                <template v-for="link in navs">
                     <v-btn
                         @click="
                             link.onClick
@@ -20,9 +16,9 @@
                         >{{ link.title }}</v-btn
                     >
                 </template>
-
-                <template v-if="isUserLoggedIn">
-                    <v-menu min-width="200px" open-on-hover location="bottom">
+                <v-spacer class="d-none d-md-block"></v-spacer>
+                <div class="d-none d-md-block" v-if="isUserLoggedIn">
+                    <v-menu min-width="200px" location="bottom">
                         <template v-slot:activator="{ props }">
                             <v-btn icon v-bind="props">
                                 <v-avatar color="btn-blue" size="large">
@@ -46,7 +42,7 @@
                                     </p>
                                     <v-divider class="my-3"></v-divider>
                                     <v-btn rounded variant="text">
-                                        Edit Account
+                                        Edit Profile
                                     </v-btn>
                                     <v-divider class="my-3"></v-divider>
                                     <v-btn
@@ -64,7 +60,7 @@
                             </v-card-text>
                         </v-card>
                     </v-menu>
-                </template>
+                </div>
                 <v-btn
                     v-else
                     @click="$store.dispatch('authModule/signinWithGoogle')"
@@ -84,14 +80,13 @@
                         </v-btn>
                     </template>
                     <v-list>
-                        <template v-for="item in links">
+                        <template v-for="item in collapsed_navs">
                             <v-divider v-if="item === 'separator'"></v-divider>
                             <v-list-item
-                                @click="item.onClick()"
-                                :to="
+                                @click="
                                     item.onClick
-                                        ? undefined
-                                        : { name: item.url }
+                                        ? item.onClick()
+                                        : $router.push({ name: item.url })
                                 "
                                 v-else
                                 :key="item.title"
@@ -101,13 +96,6 @@
                                 }}</v-list-item-title>
                             </v-list-item>
                         </template>
-                        <v-list-item
-                            @click="
-                                $store.dispatch('authModule/signinWithGoogle')
-                            "
-                        >
-                            <v-list-item-title>Login</v-list-item-title>
-                        </v-list-item>
                     </v-list>
                 </v-menu>
             </v-row>
@@ -121,7 +109,7 @@ export default {
         return {};
     },
     computed: {
-        links() {
+        navs() {
             return [
                 {
                     title: 'Home',
@@ -144,7 +132,30 @@ export default {
                     url: 'admin',
                     show: !!this.user.isAdmin,
                 },
+            ].filter((x) => x.show !== false);
+        },
+        collapsed_navs() {
+            return [
+                {
+                    title: 'Edit Profile',
+
+                    show: this.isUserLoggedIn,
+                },
+                {
+                    title: 'Login',
+                    onClick: () =>
+                        this.$store.dispatch('authModule/signinWithGoogle'),
+                    show: !this.isUserLoggedIn,
+                },
                 'separator',
+                ...this.navs,
+
+                'separator',
+                {
+                    title: 'Log out',
+                    onClick: () => this.$store.dispatch('authModule/signout'),
+                    show: this.isUserLoggedIn,
+                },
             ].filter((x) => x.show !== false);
         },
         user() {

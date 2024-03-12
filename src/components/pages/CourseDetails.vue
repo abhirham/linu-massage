@@ -1,14 +1,14 @@
 <template>
     <v-container>
         <v-row>
-            <v-col>
+            <v-col cols="12" md="6" order-md="2">
+                <v-img :src="course.imageUrl"></v-img>
+            </v-col>
+            <v-col cols="12" md="6">
                 <div class="text-secondary">${{ course.price }} CAD</div>
                 <h1>{{ course.title }}</h1>
                 <div>Course . {{ course.lessons }} Lessons</div>
                 <v-btn class="mt-7" color="primary">buy now</v-btn>
-            </v-col>
-            <v-col>
-                <v-img :src="course.imageUrl"></v-img>
             </v-col>
         </v-row>
         <h1>Contents</h1>
