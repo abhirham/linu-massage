@@ -16,6 +16,9 @@ export default {
         createUserToDB({ commit }, payload) {
             return db.collection('users').doc(payload.uid).set(payload);
         },
+        updateUserToDB(ctx, { uid, ...payload }) {
+            return db.collection('users').doc(uid).update(payload);
+        },
         fetchUserById({ commit }, { uid }) {
             return db
                 .collection('users')

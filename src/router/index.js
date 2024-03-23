@@ -26,6 +26,18 @@ const router = createRouter({
             component: () => import('@/components/pages/Rewards.vue'),
         },
         {
+            path: '/editUser',
+            name: 'edit-user',
+            component: () => import('@/components/pages/EditUser.vue'),
+            beforeEnter(to, from, next) {
+                if (store.state.userModule.user.firstname) {
+                    return next();
+                }
+
+                return next({ name: 'home' });
+            },
+        },
+        {
             path: '/admin',
             name: 'admin',
             component: () => import('@/components/pages/Admin.vue'),

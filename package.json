@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "canvas": "^2.11.2",
     "firebase": "^10.8.0",
     "moment": "^2.30.1",
     "path2d-polyfill": "^2.0.1",

@@ -41,7 +41,13 @@
                                         {{ user.email }}
                                     </p>
                                     <v-divider class="my-3"></v-divider>
-                                    <v-btn rounded variant="text">
+                                    <v-btn
+                                        rounded
+                                        variant="text"
+                                        @click="
+                                            $router.push({ name: 'edit-user' })
+                                        "
+                                    >
                                         Edit Profile
                                     </v-btn>
                                     <v-divider class="my-3"></v-divider>
@@ -138,7 +144,7 @@ export default {
             return [
                 {
                     title: 'Edit Profile',
-
+                    url: 'edit-user',
                     show: this.isUserLoggedIn,
                 },
                 {
