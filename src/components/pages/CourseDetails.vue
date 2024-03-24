@@ -28,11 +28,15 @@
             </div>
         </template>
     </v-container>
+    <Payment />
 </template>
 
 <script>
+import Payment from '../Payment.vue';
+
 export default {
     props: ['courseId'],
+    components: { Payment },
     data() {
         return {
             course: {},

@@ -3,7 +3,7 @@
         v-model="showAlert"
         content-class="bg-white"
         location="top right"
-        timeout="-1"
+        timeout="10000"
         z-index="2500"
     >
         <div class="d-flex align-center">
