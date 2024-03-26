@@ -28,7 +28,7 @@
             </div>
         </template>
     </v-container>
-    <Payment />
+    <Payment :courseId="courseId" />
 </template>
 
 <script>

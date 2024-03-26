@@ -17,4 +17,8 @@ export default {
             return 'Invalid email.';
         },
     ],
+    postalCode: [
+        (val) =>
+            /^[A-Z]\d[A-Z]\s\d[A-Z]\d$/.test(val) ? true : 'Format: A2A 2A2',
+    ],
 };
