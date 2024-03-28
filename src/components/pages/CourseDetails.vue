@@ -8,7 +8,9 @@
                 <div class="text-secondary">${{ course.price }} CAD</div>
                 <h1>{{ course.title }}</h1>
                 <div>Course . {{ course.lessons }} Lessons</div>
-                <v-btn class="mt-7" color="primary">buy now</v-btn>
+                <v-btn class="mt-7" color="primary" @click="showCheckout = true"
+                    >buy now</v-btn
+                >
             </v-col>
         </v-row>
         <h1>Contents</h1>
@@ -28,18 +30,24 @@
             </div>
         </template>
     </v-container>
-    <Payment :courseId="courseId" />
+    <Checkout
+        v-model="showCheckout"
+        v-if="showCheckout"
+        :courseId="courseId"
+        :price="course.price"
+    />
 </template>
 
 <script>
-import Payment from '../Payment.vue';
+import Checkout from '../Checkout.vue';
 
 export default {
     props: ['courseId'],
-    components: { Payment },
+    components: { Checkout },
     data() {
         return {
             course: {},
+            showCheckout: false,
         };
     },
     mounted() {

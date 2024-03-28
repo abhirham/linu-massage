@@ -11,6 +11,12 @@ export default {
         setUser(state, payload) {
             state.user = payload;
         },
+        addCourseToUser(state, courseId) {
+            state.user.purchasedCourses = [
+                ...(state.user.purchasedCourses ?? []),
+                courseId,
+            ];
+        },
     },
     actions: {
         createUserToDB({ commit }, payload) {

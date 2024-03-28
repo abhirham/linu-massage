@@ -4,13 +4,25 @@
         max-width="1000"
         no-click-animation
         persistent
-        :model-value="true"
+        v-model="dialog"
     >
         <v-card>
+            <template v-slot:title>
+                <div class="font-weight-black px-6">Checkout</div>
+            </template>
+            <template v-slot:append>
+                <div class="">
+                    <v-btn
+                        density="comfortable"
+                        icon="mdi-close"
+                        variant="plain"
+                        @click="dialog = false"
+                    ></v-btn>
+                </div>
+            </template>
             <v-card-text>
                 <v-row>
                     <v-col cols="12" md="6" class="pa-10">
-                        <h2 class="mb-5">Checkout</h2>
                         <h3 class="mb-2">Billing Address</h3>
                         <v-form v-model="isBillingAddressValid">
                             <v-row>
@@ -91,7 +103,7 @@
                         <div id="payment-status-container"></div>
                     </v-col>
                     <v-col class="grey-bg pa-10" cols="12" md="6">
-                        <h3 class="mb-2 mt-14">Summary</h3>
+                        <h3 class="mb-2">Summary</h3>
                         <v-list-item class="px-0">
                             <template v-slot:title
                                 ><div class="font-weight-black">
@@ -138,7 +150,8 @@ let payments = null;
 
 export default {
     inject: ['validation_rules'],
-    props: ['courseId'],
+    props: ['courseId', 'price', 'modelValue'],
+    emits: ['update:modelValue'],
     data() {
         return {
             cardLoaded: false,
@@ -164,6 +177,14 @@ export default {
             },
             set(val) {
                 this._postalCode = val.toUpperCase();
+            },
+        },
+        dialog: {
+            get() {
+                return this.modelValue;
+            },
+            set(val) {
+                this.$emit('update:modelValue', val);
             },
         },
     },
@@ -221,6 +242,8 @@ export default {
                     city: this.city,
                     postalCode: this.postalCode,
                 },
+                amount: this.price,
+                currencyCode: 'CAD',
                 intent: 'CHARGE',
             };
 
@@ -254,7 +277,7 @@ export default {
                     { root: true }
                 );
 
-                console.debug('Payment Success', paymentResults);
+                this.$store.commit('userModule/addCourseToUser', this.courseId);
             } catch (e) {
                 this.makingPayment = false;
                 this.$store.commit(

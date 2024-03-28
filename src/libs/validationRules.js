@@ -19,6 +19,6 @@ export default {
     ],
     postalCode: [
         (val) =>
-            /^[A-Z]\d[A-Z]\s\d[A-Z]\d$/.test(val) ? true : 'Format: A2A 2A2',
+            /^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(val) ? true : 'Format: A2A2A2',
     ],
 };
